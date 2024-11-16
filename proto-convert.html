@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protobuf Hex Decoder</title>
+    <script src="https://cdn.jsdelivr.net/npm/protobufjs@7.4.0/dist/protobuf.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+        }
+        pre {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            overflow: auto;
+        }
+    </style>
+</head>
+<body>
+    <h2>Protobuf Hex Decoder</h2>
+    <label for="protoFile">Enter Proto file schema here : </label>
+    <textarea id="protoFile" placeholder="Enter proto file here..."></textarea>
+
+    <label for="objectName">Enter object name you want to decode for along with package name. e.g. if package name in protofile is main and object name is Employee, then enter main.Employee :</label>
+    <textarea id="objectName" style="width: 100%; height: 18px; resize:none;" placeholder="Enter object name here..."></textarea>
+    
+    <label for="hexInput">Enter Hex-encoded Protobuf Message:</label>
+    <textarea id="hexInput" placeholder="Enter hex code here..."></textarea>
+    
+    <button onclick="decodeMessage()">Decode</button>
+    
+    <h3>Decoded Output:</h3>
+    <pre id="output"></pre>
+
+    <script>
+               
+
+        
+        
+
+        function decodeMessage(){
+            // Load the schema and initialize the decoder
+            const protoTemplateLiteral = protoFile.value;
+
+            var root = protobuf.parse(protoTemplateLiteral).root;
+            
+
+            const lookupTypeName = objectName.value;
+            const hexInput = document.getElementById('hexInput').value.trim();
+            const outputElem = document.getElementById('output');
+
+            if (!root) {
+                outputElem.textContent = "Protobuf schema not loaded.";
+                return;
+            }
+
+            if (!hexInput) {
+                outputElem.textContent = "Please enter a hex-encoded message.";
+                return;
+            }
+
+            try {
+                const bytes = hexToBytes(hexInput);
+                var AwesomeMessage = root.lookupType(lookupTypeName);
+                var message = AwesomeMessage.decode(bytes);
+                outputElem.textContent = JSON.stringify(message, null, 2);
+            } catch (error) {
+                outputElem.textContent = "Error decoding message: " + error.message;
+            }
+        }
+
+        // Utility function to convert hex string to Uint8Array
+        function hexToBytes(hex) {
+            const bytes = [];
+            for (let i = 0; i < hex.length; i += 2) {
+                bytes.push(parseInt(hex.substr(i, 2), 16));
+            }
+            return new Uint8Array(bytes);
+        }
+    </script>
+</body>
+</html>

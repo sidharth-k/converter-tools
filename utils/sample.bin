@@ -1,0 +1,13 @@
+
+„name: "Larry"
+age: 99
+t: [{
+    comment: "hello"
+}, {
+    comment: "world"
+}]
+labels: [{
+    source: "foo"
+}, {
+    source: "bar"
+}]

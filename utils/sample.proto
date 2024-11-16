@@ -1,0 +1,18 @@
+
+syntax = "proto3";
+package main;
+
+message Test {
+    string comment = 1;
+}
+
+message Example {
+    string name = 1;
+    int32 age = 2;
+    repeated Test t = 3;
+
+    message Label {
+        string source = 1;
+    }
+    repeated Label labels = 4;
+}
