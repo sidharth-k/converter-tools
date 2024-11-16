@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON CamelCase - SnakeCase Converter Free Online tool</title>
+    <meta name="description" content="Easily convert JSON keys between camelCase and snake_case with our free online tool. No installation required. Fast and simple to use.">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+            margin-bottom: 10px;
+        }
+        button {
+            margin-right: 10px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>JSON CamelCase - SnakeCase Converter Free Online tool</h2>
+
+    <textarea id="inputJson" placeholder="Paste your JSON here..."></textarea>
+    <br>
+    <button onclick="convertCamelToSnake()">CamelCase to SnakeCase</button>
+    <button onclick="convertSnakeToCamel()">SnakeCase to CamelCase</button>
+
+    <h3>Output:</h3>
+    <textarea id="outputJson" placeholder="Converted JSON will appear here..."></textarea>
+
+    <script>
+        // Function to convert camelCase to snake_case
+        function camelToSnake(str) {
+            return str.replace(/([A-Z])/g, '_$1').toLowerCase();
+        }
+
+        // Function to convert snake_case to camelCase
+        function snakeToCamel(str) {
+            return str.replace(/_([a-z])/g, (_, c) => c.toUpperCase());
+        }
+
+        // Recursively convert JSON keys from camelCase to snake_case
+        function convertCamelToSnake() {
+            const inputJson = document.getElementById('inputJson').value;
+            try {
+                const jsonObject = JSON.parse(inputJson);
+                const convertedObject = convertKeys(jsonObject, camelToSnake);
+                document.getElementById('outputJson').value = JSON.stringify(convertedObject, null, 2);
+            } catch (error) {
+                alert('Invalid JSON input!');
+            }
+        }
+
+        // Recursively convert JSON keys from snake_case to camelCase
+        function convertSnakeToCamel() {
+            const inputJson = document.getElementById('inputJson').value;
+            try {
+                const jsonObject = JSON.parse(inputJson);
+                const convertedObject = convertKeys(jsonObject, snakeToCamel);
+                document.getElementById('outputJson').value = JSON.stringify(convertedObject, null, 2);
+            } catch (error) {
+                alert('Invalid JSON input!');
+            }
+        }
+
+        // Function to convert object keys using a conversion function
+        function convertKeys(obj, convertFunc) {
+            if (Array.isArray(obj)) {
+                return obj.map(item => convertKeys(item, convertFunc));
+            } else if (obj !== null && typeof obj === 'object') {
+                return Object.keys(obj).reduce((acc, key) => {
+                    const convertedKey = convertFunc(key);
+                    acc[convertedKey] = convertKeys(obj[key], convertFunc);
+                    return acc;
+                }, {});
+            }
+            return obj;
+        }
+    </script>
+
+</body>
+</html>
