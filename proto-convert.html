@@ -53,7 +53,7 @@
             
 
             const lookupTypeName = objectName.value;
-            const hexInput = document.getElementById('hexInput').value.trim();
+            const hexInput = document.getElementById('hexInput').value.trim().replace(/\s/g, "");
             const outputElem = document.getElementById('output');
 
             if (!root) {
